@@ -75,6 +75,17 @@ export default {
           transition: .2s;
           color: #01164d;
           text-decoration: none;
+          border-radius: 5px;
+          box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+          &__active {
+            background-color: #0063db;
+            color: #fff;
+          }
+
+          &__active .img {
+            filter: brightness(0) invert(1);
+          }
 
           &:hover {
             background-color: #0063db;

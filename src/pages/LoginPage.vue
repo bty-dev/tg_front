@@ -9,23 +9,55 @@
         </div>
         <div class="card__controls">
             <label for="login">Логин</label>
-            <input id="login" type="text">
+            <input @input="invalid = false" v-model="login" id="login" type="text">
+            <small v-if="invalid">Проверьте правильность введенных данных!</small>
         </div>
         <div class="card__controls">
             <label for="password">Пароль</label>
-            <input id="password" type="password">
+            <input v-model="password" id="password" type="password">
+            <small v-if="invalid">Проверьте правильность введенных данных!</small>
         </div>
-        <button @click="$router.push('/home')" class="card__btn">Авторизоваться!</button>
+        <button @click="signIn" class="card__btn">Авторизоваться!</button>
       </div>
     </div>
 </template>
 
 <script>
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+import axios from "axios";
+import store from "@/store";
+
 export default {
     setup() {
+        const login = ref("");
+        const password = ref("");
 
+        const invalid = ref(false);
 
-        return {}
+        const router = useRouter();
+
+        const signIn = () => {
+          axios.post("http://localhost:5000/api/login", {
+            login: login.value,
+            password: password.value
+          })
+          .then(res => {
+            if (res.status === 200) {
+              store.dispatch("setAuth", true);
+              router.push("/home")
+            }
+          })
+          .catch(e => invalid.value = true);
+
+        }
+
+        return {
+          login,
+          password,
+          signIn,
+          invalid
+        }
     }
 }
 </script>
@@ -101,5 +133,9 @@ export default {
       }
     }
   }
+}
+small {
+  color: red;
+  font-size: 15px;
 }
 </style>

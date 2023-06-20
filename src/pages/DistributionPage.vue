@@ -11,7 +11,7 @@
             <div class="list">
                 <div class="list__item" v-for="msg in messages" :key="msg.id">
                     <div class="name">{{msg.date}}</div>
-                    <button class="more">Перейти</button>
+
                 </div>
             </div>
         </div>
@@ -22,41 +22,72 @@
             </div>
             <div class="modal__controls">
               <label for="send_date">Дата отправки:</label>
-              <input id="send_date" type="text">
+              <input placeholder="Год" v-model="year" id="send_date" type="text">
+              <input placeholder="Месяц" v-model="month" id="send_date" type="text">
+              <input placeholder="День" v-model="day" id="send_date" type="text">
+              <input placeholder="Время" v-model="time" id="send_date" type="text">
             </div>
             <div class="modal__controls">
               <label for="send_text">Текст сообщения:</label>
-              <textarea id="send_text"/>
+              <textarea v-model="content" id="send_text"/>
             </div>
-            <button class="create__message">Создать рассылку</button>
+            <button class="create__message" @click="sendMessage">Создать рассылку</button>
           </div>
         </div>
     </div>
 </template>
 
 <script>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import store from "@/store";
 
 export default {
     setup() {
-        const messages = [
-            {id: 1, date: "17.07.2003"},
-            {id: 2, date: "17.07.2003"},
-            {id: 3, date: "17.07.2003"},
-            {id: 4, date: "17.07.2003"},
-            {id: 5, date: "17.07.2003"},
-            {id: 6, date: "17.07.2003"},
-            {id: 7, date: "17.07.2003"},
-            {id: 7, date: "17.07.2003"},
-            {id: 7, date: "17.07.2003"},
-            {id: 7, date: "17.07.2003"},
-        ]
+        const date = ref("");
+        const year = ref("");
+        const month = ref("");
+        const day = ref("");
+        const time = ref("");
+        const content = ref("");
+
+        const sendMessage = () => {
+          if (year.value && month.value && day.value && time.value) {
+            const hour = time.value.split(":")[0];
+            const minute = time.value.split(":")[1];
+            console.log([+year.value, month.value - 1, +day.value, +hour, +minute])
+            date.value = [+year.value, month.value - 1, +day.value, +hour, +minute]
+            axios.post("http://localhost:5000/api/createMessage", {
+              date: [+year.value, month.value - 1, +day.value, +hour, +minute],
+              content: content.value
+            })
+            store.dispatch("addMessage", {
+              id: messages.value.length + 1,
+              date: [ +day.value, month.value, +year.value].join(".")
+            })
+          }else {
+            axios.post(`https://api.telegram.org/bot6050028592:AAE5bNkJSBadsW63lSF5DzoakCYYwEb26rA/sendMessage?chat_id=-1001686791009&text=${content.value}`);
+          }
+        }
+
+
+      const messages = ref([]);
+      onMounted(() => {
+        messages.value = store.state.messages;
+      })
 
         const isModalOpen = ref(false);
 
         return {
             messages,
-            isModalOpen
+            isModalOpen,
+          date,
+          content,
+          sendMessage,
+          year,
+          month,
+          day,
+          time
         }
     }
 }

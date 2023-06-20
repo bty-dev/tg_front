@@ -9,7 +9,7 @@
                   <router-link to="/home" class="nav__list__item"><img class="img" src="../assets/nav/home_ic.png" alt="">Главная</router-link>
                   <router-link to="/distribution" class="nav__list__item"><img class="img" src="../assets/nav/messages_ic.png" alt="">Рассылка</router-link>
                   <router-link to="/employees" class="nav__list__item"><img class="img" src="../assets/nav/team.png" alt="">Сотрудники</router-link>
-                  <router-link to="/login" class="nav__list__item"><img class="img" src="../assets/nav/quit.png" alt="">Выйти</router-link>
+                  <router-link @click="exit" to="/login" class="nav__list__item"><img class="img" src="../assets/nav/quit.png" alt="">Выйти</router-link>
               </ul>
           </nav>
         </div>
@@ -17,11 +17,17 @@
 </template>
 
 <script>
+import store from "@/store";
+
 export default {
     setup() {
 
-
-        return {}
+        const exit = () => {
+          store.dispatch("setAuth", false);
+        }
+        return {
+          exit
+        }
     }
 }
 </script>

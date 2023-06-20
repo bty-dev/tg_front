@@ -16,20 +16,9 @@
                   Писем отправлено
               </div>
               <div class="col__content">
-                  500
+                  {{count}}
               </div>
           </div>
-            <div class="stats__col">
-                <div class="col__img">
-                    <img src="../assets/eye.png" alt="">
-                </div>
-                <div class="col__title">
-                    Просмотрели
-                </div>
-                <div class="col__content">
-                    2000
-                </div>
-            </div>
             <div class="stats__col">
                 <div class="col__img">
                     <img src="../assets/nav/team.png" alt="">
@@ -38,7 +27,7 @@
                     Сотрудники
                 </div>
                 <div class="col__content">
-                    5100
+                    {{stats.employees}}
                 </div>
             </div>
         </div>
@@ -47,11 +36,23 @@
 </template>
 
 <script>
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import store from "@/store";
+
 export default {
     setup() {
+      const stats = ref({});
 
-
-        return {}
+      onMounted(() => {
+        axios.get("http://localhost:5000/api/statistics")
+            .then(res => stats.value = res.data);
+      })
+      const count = store.state.messages.length;
+        return {
+          stats,
+          count,
+        }
     }
 }
 </script>

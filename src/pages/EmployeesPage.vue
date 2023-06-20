@@ -41,29 +41,39 @@
 </template>
 
 <script>
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
+import axios from "axios";
 
 export default {
     setup() {
-      const employees = [
-          {id: 1, name: "Иванов Ильнар Иванович", position: "Программист"},
-          {id: 2, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 3, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 4, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 5, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 6, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 7, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 8, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 9, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 10, name: "Иванов Иван Иванович", position: "Программист"},
-          {id: 11, name: "Иванов Иван Поварович", position: "Повар"},
-      ]
+      // const employees = [
+      //     {id: 1, name: "Иванов Ильнар Иванович", position: "Программист"},
+      //     {id: 2, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 3, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 4, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 5, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 6, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 7, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 8, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 9, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 10, name: "Иванов Иван Иванович", position: "Программист"},
+      //     {id: 11, name: "Иванов Иван Поварович", position: "Повар"},
+      // ]
+      const employees = ref([]);
+
+      onMounted(() => {
+        axios.get("http://localhost:5000/api/employees")
+            .then(res => {
+              employees.value = res.data;
+              console.log(res.data)
+            });
+      })
 
       let currentEmp = ref({});
 
       const isModalOpen = ref(false);
       const openModalWithId = (empId) => {
-        currentEmp.value = employees[employees.findIndex(item => item.id === empId)];
+        currentEmp.value = employees.value[employees.value.findIndex(item => item.id === empId)];
         console.log(currentEmp)
         isModalOpen.value = true;
       }
@@ -71,7 +81,7 @@ export default {
       const searchQuery = ref("");
 
       const filteredEmployees = computed(() => {
-        return employees.filter(item => {
+        return employees.value.filter(item => {
           return (
               item.name
                   .toLowerCase()

@@ -59,7 +59,7 @@ export default {
             console.log([+year.value, month.value - 1, +day.value, +hour, +minute])
             date.value = [+year.value, month.value - 1, +day.value, +hour, +minute]
             instance.post("/api/createMessage", {
-              date: [+year.value, month.value - 1, +day.value, +hour, +minute],
+              date: [+year.value, month.value - 1, +day.value, +hour - 5, +minute],
               content: content.value
             })
             store.dispatch("addMessage", {

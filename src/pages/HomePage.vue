@@ -39,13 +39,14 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import store from "@/store";
+import instance from "@/api/api";
 
 export default {
     setup() {
       const stats = ref({});
 
       onMounted(() => {
-        axios.get("http://localhost:5000/api/statistics")
+        instance.get("/api/statistics")
             .then(res => stats.value = res.data);
       })
       const count = store.state.messages.length;

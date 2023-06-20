@@ -43,6 +43,7 @@
 <script>
 import {computed, onMounted, reactive, ref} from "vue";
 import axios from "axios";
+import instance from "@/api/api";
 
 export default {
     setup() {
@@ -62,7 +63,7 @@ export default {
       const employees = ref([]);
 
       onMounted(() => {
-        axios.get("http://localhost:5000/api/employees")
+        instance.get("/api/employees")
             .then(res => {
               employees.value = res.data;
               console.log(res.data)

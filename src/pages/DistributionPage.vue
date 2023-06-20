@@ -41,6 +41,7 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import store from "@/store";
+import instance from "@/api/api";
 
 export default {
     setup() {
@@ -57,7 +58,7 @@ export default {
             const minute = time.value.split(":")[1];
             console.log([+year.value, month.value - 1, +day.value, +hour, +minute])
             date.value = [+year.value, month.value - 1, +day.value, +hour, +minute]
-            axios.post("http://localhost:5000/api/createMessage", {
+            instance.post("/api/createMessage", {
               date: [+year.value, month.value - 1, +day.value, +hour, +minute],
               content: content.value
             })

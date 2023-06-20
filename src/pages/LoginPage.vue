@@ -27,6 +27,7 @@ import {ref} from "vue";
 import {useRouter} from "vue-router";
 import axios from "axios";
 import store from "@/store";
+import instance from "@/api/api";
 
 export default {
     setup() {
@@ -38,7 +39,7 @@ export default {
         const router = useRouter();
 
         const signIn = () => {
-          axios.post("http://localhost:5000/api/login", {
+          instance.post("/api/login", {
             login: login.value,
             password: password.value
           })

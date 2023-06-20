@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import axios from "axios";
 import store from "@/store";
 import instance from "@/api/api";
@@ -68,6 +68,10 @@ export default {
             })
           }else {
             axios.post(`https://api.telegram.org/bot6050028592:AAE5bNkJSBadsW63lSF5DzoakCYYwEb26rA/sendMessage?chat_id=-1001686791009&text=${content.value}`);
+            store.dispatch("addMessage", {
+              id: messages.value.length + 1,
+              date: "21.6.2023"
+            })
           }
         }
 
@@ -77,7 +81,11 @@ export default {
         messages.value = store.state.messages;
       })
 
-        const isModalOpen = ref(false);
+      onBeforeMount(() => {
+        store.commit('initialiseVars')
+      })
+
+      const isModalOpen = ref(false);
 
         return {
             messages,

@@ -24,6 +24,11 @@ const store = createStore({
         },
         addMessage(state, payload) {
             state.messages.push(payload);
+        },
+        initialiseVars(state) {
+            if (localStorage.getItem('messages')) {
+                state.messages = JSON.parse(localStorage.messages)
+            }
         }
     },
     actions: {
